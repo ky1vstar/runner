@@ -1,0 +1,18 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: cirrusci/flutter:stable
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup Dart SDK
+      run: |
+        DART_SDK_URL="https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-$(echo "${{ runner.os }}" | awk '{print tolower($0)}')-x64-release.zip"
+        curl --connect-timeout 15 --retry 5 "$DART_SDK_URL" > "dartsdk.zip"
+        unzip -o "dartsdk.zip" -d "." > /dev/null
+        ./dart-sdk/bin/dart --version
