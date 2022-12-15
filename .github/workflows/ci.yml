@@ -14,6 +14,7 @@ jobs:
       env:
         DART_SDK_URL: "https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-${{ runner.os }}-x64-release.zip"
       run: |
+        echo $DART_SDK_URL
         curl --connect-timeout 15 --retry 5 "$DART_SDK_URL" > "dartsdk.zip"
-        unzip -o "dartsdk.zip" -d "." > /dev/null
+        unzip -o "./dartsdk.zip" -d "." > /dev/null
         ./dart-sdk/bin/dart --version
