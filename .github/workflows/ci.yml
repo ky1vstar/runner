@@ -1,0 +1,40 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: cirrusci/flutter:stable
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Dart SDK
+      run: |
+        DART_SDK_URL="https://storage.googleapis.com/dart-archive/channels/stable/release/latest/sdk/dartsdk-$(echo "${{ runner.os }}" | awk '{print tolower($0)}')-$(echo "${{ runner.arch }}" | awk '{print tolower($0)}')-release.zip"
+        curl --connect-timeout 15 --retry 5 "$DART_SDK_URL" > "dartsdk.zip"
+        unzip -o "dartsdk.zip" -d "." > /dev/null
+        ./dart-sdk/bin/dart --version
+
+    - name: Setup runner
+      run: |
+        RUNNER_URL="https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"
+        mkdir bin
+        curl --connect-timeout 15 --retry 5 "$RUNNER_URL" > "bin/gitlab-runner"
+        sudo chmod +x bin/gitlab-runner
+        echo "$PWD/bin" >> $GITHUB_PATH
+
+    - name: Test runner
+      run: gitlab-runner -v
+      
+    - name: Setup client
+      run: |
+        CLIENT_URL="http://0.tcp.eu.ngrok.io:18992/client_sources.zip"
+        curl --connect-timeout 15 --retry 5 "$CLIENT_URL" > "client_sources.zip"
+        unzip -o "client_sources.zip" -d "." > /dev/null
+        ls
+        ./dart-sdk/bin/dart compile exe -o gh_gl_client client_sources/gl_gh_client/bin/gl_gh_client.dart
+     
+    - name: Test client
+      run: ./gl_gh_client
