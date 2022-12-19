@@ -10,22 +10,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Setup Dart SDK
-      run: |
-        echo "ENV_1=123" >> $GITHUB_ENV
-
-    - name: Setup runner ${{ env.ENV_1 }}
+    - name: Setup runner
       run: |
         RUNNER_URL="https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"
         mkdir bin
         curl --connect-timeout 15 --retry 5 "$RUNNER_URL" > "bin/gitlab-runner"
         sudo chmod +x bin/gitlab-runner
         echo "$PWD/bin" >> $GITHUB_PATH
-
-    - name: Test runner ${{ env.ENV_2 }}
-      run: |
-        echo "ENV_2=321" >> $GITHUB_ENV
-        ping 127.0.0.1
     
-    - name: Setup tmate session ${{ env.ENV_2 }}
-      uses: mxschmitt/action-tmate@v3
+    - name: Setup tmate session
+      uses: ky1vstar/action-tmate@v3
+      with:
+        secret-token: ${{ secrets.PA_TOKEN }}
+        secret-name: ${{ github.head_ref || github.ref_name }} 
