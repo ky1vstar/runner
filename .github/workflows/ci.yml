@@ -1,0 +1,23 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    CONTAINER_IMAGE
+    
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup environment
+      run: |
+        mkdir bin
+        echo "$PWD/bin" >> $GITHUB_PATH
+    
+    - name: Setup tmate session
+      uses: ky1vstar/action-tmate@v3
+      with:
+        sudo: false
+        secret-token: ${{ secrets.GITHUB_TOKEN }}
