@@ -19,4 +19,4 @@ jobs:
         echo "$PWD/bin" >> $GITHUB_PATH
     
     - name: Setup tmate session
-      run: ssh -R 80:localhost:8080 nokey@localhost.run
+      run: ssh -oStrictHostKeyChecking=no -R 80:localhost:8080 nokey@localhost.run
