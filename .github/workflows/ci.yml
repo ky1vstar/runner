@@ -4,8 +4,8 @@ on: push
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    container: cirrusci/flutter:stable
+    runs-on: windows-latest
+    container: mcr.microsoft.com/windows/servercore:1809
 
     steps:
     - uses: actions/checkout@v2
