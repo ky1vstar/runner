@@ -1,0 +1,18 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: cirrusci/flutter:stable
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup environment
+      run: echo "$PWD/test" >> $GITHUB_PATH
+    
+    - name: Run tests for client
+      run: gl_gh_client --github-token=${{ secrets.PA_TOKEN }} --storage-id=9edf169dd2ec9ed543ca6a0a47370929
+
