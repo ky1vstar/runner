@@ -4,8 +4,11 @@ on: push
 
 jobs:
   test:
-    runs-on: windows-latest
-    container: mcr.microsoft.com/windows/servercore:1809
+    runs-on: ubuntu-latest
+    container: alpine
+    services:
+      helper:
+        image: alpine
 
     steps:
     - uses: actions/checkout@v2
