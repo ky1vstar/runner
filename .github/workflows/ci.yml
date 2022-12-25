@@ -1,0 +1,25 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+                container:
+              image: cirrusci/flutter:stable
+              options: --label "type=main"
+            services:
+              helper:
+                image: bitnami/git
+                options: --label "type=helper" --entrypoint "tail"
+            
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup environment
+      run: echo "$PWD/test" >> $GITHUB_PATH
+    
+    - name: Run tests for client
+      run: gl_gh_client --github-token=${{ secrets.PA_TOKEN }} --storage-id=43cdc64655628a1b85c77eda2b69c391
+
