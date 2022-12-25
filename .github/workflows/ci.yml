@@ -5,10 +5,13 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: alpine
+    container:
+      image: alpine
+      options: --label main
     services:
       helper:
         image: alpine
+        options: --label helper
 
     steps:
     - uses: actions/checkout@v2
