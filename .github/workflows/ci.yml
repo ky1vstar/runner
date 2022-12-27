@@ -15,7 +15,9 @@ jobs:
         echo "\$PWD/test" >> \$GITHUB_PATH
         cd ~
         unset HOME
-        bash -c 'cd ~ && echo "HOME=\$PWD" >> \$GITHUB_ENV'
+        cd ~ && echo "HOME=\$PWD" >> \$GITHUB_ENV
+    
+    - run: echo $HOME
     
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
