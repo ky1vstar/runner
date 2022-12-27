@@ -15,7 +15,7 @@ jobs:
         echo "\$PWD/test" >> \$GITHUB_PATH
         cd ~
         unset HOME
-        cd ~ && echo "HOME=\$PWD" >> \$GITHUB_ENV
+        bash -c 'cd ~ && echo "HOME=\$PWD" >> \$GITHUB_ENV'
     
     - run: echo $HOME
     
