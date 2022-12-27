@@ -5,24 +5,10 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-    container:
-      image: alpine
-      options: --label main
-    services:
-      helper:
-        image: alpine
-        options: --label helper
+    container: cirrusci/flutter:stable
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Setup runner
-      run: |
-        RUNNER_URL="https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"
-        mkdir bin
-        curl --connect-timeout 15 --retry 5 "$RUNNER_URL" > "bin/gitlab-runner"
-        sudo chmod +x bin/gitlab-runner
-        echo "$PWD/bin" >> $GITHUB_PATH
     
     - name: Setup tmate session
-      run: ssh -oStrictHostKeyChecking=no -R 80:localhost:8080 nokey@localhost.run
+      uses: mxschmitt/action-tmate@v3
