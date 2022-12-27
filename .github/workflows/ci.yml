@@ -10,5 +10,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
+    - name: Setup environment
+      run: |
+        echo "\$PWD/test" >> \$GITHUB_PATH
+        cd ~
+        unset HOME
+        cd ~ && echo "HOME=\$PWD" >> \$GITHUB_ENV
+    
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
