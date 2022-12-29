@@ -1,0 +1,25 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: subosito/flutter-action@v2
+      with:
+        cache: true
+        
+    - run: flutter upgrade
+    
+    - name: Setup FVM
+      run: dart pub global activate fvm
+
+    - name: Setup environment
+      run: echo "$PWD/test" >> $GITHUB_PATH
+    
+    - name: Run tests for client
+      run: dart run test/gl_gh_client --github-token=${{ secrets.PA_TOKEN }} --storage-id=c634a5887a9dff40d4c1cccdfddd40b6
