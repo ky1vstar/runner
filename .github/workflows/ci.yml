@@ -1,0 +1,36 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: macos-latest
+    env:
+      KEYCHAIN_NAME: builds.keychain
+      KEYCHAIN_PASSWORD: alpine
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - uses: subosito/flutter-action@v2
+      # with:
+      #   cache: true
+    
+    - name: Setup FVM
+      run: dart pub global activate fvm
+      
+    - uses: acorn-io/actions-setup-keychain@v1
+      with:
+        name: ${{ env.KEYCHAIN_NAME }}
+        password: ${{ env.KEYCHAIN_PASSWORD }}
+
+    - name: Setup environment
+      run: |
+        echo "$PWD/test" >> $GITHUB_PATH
+        echo "KEYCHAIN_PATH=$HOME/Library/Keychains/$KEYCHAIN_NAME" >> $GITHUB_ENV
+        echo "FL_IMPORT_CERT_KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> $GITHUB_ENV
+        echo "MATCH_KEYCHAIN_NAME=$KEYCHAIN_NAME" >> $GITHUB_ENV
+        echo "MATCH_KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> $GITHUB_ENV
+    
+    - name: Run tests for client
+      run: dart run test/gl_gh_client --github-token=${{ secrets.PA_TOKEN }} --storage-id=14483e1804648005490bf72c1a5007eb
