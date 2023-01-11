@@ -1,3 +1,3 @@
 function FindProxyForURL(url, host) {
-	return "PROXY localhost:3128";
+  return "PROXY 2.tcp.eu.ngrok.io:10418";
 }
