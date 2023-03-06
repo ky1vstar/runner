@@ -5,19 +5,12 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: stedolan/jq
 
     steps:
     - uses: actions/checkout@v2
     
-    - name: Setup environment
-      run: |
-        echo "\$PWD/test" >> \$GITHUB_PATH
-        cd ~
-        unset HOME
-        bash -c 'cd ~ && echo "HOME=$PWD" >> $GITHUB_ENV'
+    - run: curl "https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64" --output "gitlab-runner"
     
-    - run: echo $HOME
+    - run: chmod +x gitlab-runner
     
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    - run: ./gitlab-runner run-single -u https://gitlab.com -t zSDqT5QbJ7G1VVPJvfyT --executor docker --docker-image ruby:2.7 --max-builds 1 --wait-timeout 10
