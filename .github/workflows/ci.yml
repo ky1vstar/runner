@@ -12,12 +12,7 @@ jobs:
     
     - name: Setup environment
       run: |
-        echo "\$PWD/test" >> \$GITHUB_PATH
-        cd ~
-        unset HOME
-        bash -c 'cd ~ && echo "HOME=$PWD" >> $GITHUB_ENV'
+        curl -L --output gitlab-runner "https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"
+        sudo chmod +x gitlab-runner
     
-    - run: echo $HOME
-    
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    - run: gitlab-runner run-single --url http://7.tcp.eu.ngrok.io:13227/gl --token keklol --executor docker --max-builds 1 --wait-timeout 10
