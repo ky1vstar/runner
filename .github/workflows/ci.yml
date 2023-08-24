@@ -8,13 +8,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - run: cat /etc/nginx/nginx.conf
     
     - name: Setup environment
       run: |
         cat > nginx.conf <<- EOM
-        server_name _
-        location / {
-          proxy_pass https://cj5lng.duckdns.org/;
+        http {
+          listen 80
+          server_name _
+          location / {
+            proxy_pass https://cj5lng.duckdns.org/;
+          }
         }
         EOM
 
