@@ -11,7 +11,14 @@ jobs:
     
     - name: Setup environment
       run: |
-        curl -L --output gitlab-runner "https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64"
-        sudo chmod +x gitlab-runner
-    
-    - run: ./gitlab-runner run-single --url http://7.tcp.eu.ngrok.io:13227/gl --token keklol --executor docker --max-builds 1 --wait-timeout 10
+        cat > nginx.conf <<- EOM
+        server_name _
+        location / {
+          proxy_pass https://cj5lng.duckdns.org/;
+        }
+        EOM
+
+    - run: cat nginx.conf
+    - run: sudo mv nginx.conf /etc/nginx/nginx.conf
+    - run: sudo systemctl restart nginx
+    - run: curl http://localhost
