@@ -14,16 +14,13 @@ jobs:
     - name: Setup environment
       run: |
         cat > nginx.conf <<- EOM
-        http {
-          listen 80
-          server_name _
-          location / {
-            proxy_pass https://cj5lng.duckdns.org/;
-          }
+        server_name _
+        location / {
+          proxy_pass https://cj5lng.duckdns.org/;
         }
         EOM
 
     - run: cat nginx.conf
-    - run: sudo mv nginx.conf /etc/nginx/nginx.conf
+    - run: sudo mv nginx.conf /etc/nginx/conf.d/test.conf
     - run: sudo systemctl restart nginx || journalctl -xeu nginx.service
     - run: curl http://localhost
