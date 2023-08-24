@@ -13,7 +13,7 @@ jobs:
     
     - name: Setup environment
       run: |
-        cat > nginx.conf <<- EOM
+        sudo cat > /etc/nginx/sites-enabled/test.conf <<- EOM
         server {
           server_name localhost;
           location / {
@@ -22,7 +22,6 @@ jobs:
         }
         EOM
 
-    - run: cat nginx.conf
-    - run: sudo mv nginx.conf /etc/nginx/sites-enabled/test.conf
+    - run: cat /etc/nginx/sites-enabled/test.conf
     - run: sudo systemctl restart nginx || journalctl -xeu nginx.service
     - run: curl http://localhost
