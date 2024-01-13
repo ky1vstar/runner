@@ -9,19 +9,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: cat /etc/nginx/nginx.conf
-    
-    - name: Setup environment
-      run: |
-        sudo cat > /etc/nginx/sites-enabled/test.conf <<- EOM
-        server {
-          server_name localhost;
-          location / {
-            proxy_pass https://cj5lng.duckdns.org/;
-          }
-        }
-        EOM
-
-    - run: cat /etc/nginx/sites-enabled/test.conf
-    - run: sudo systemctl restart nginx || journalctl -xeu nginx.service
-    - run: curl http://localhost
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
