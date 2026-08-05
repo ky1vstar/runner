@@ -4,10 +4,17 @@ on: push
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v7
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    - name: Install jwt-cli
+      run: |
+        set -euo pipefail
+        if ! command -v jwt >/dev/null 2>&1; then
+          cargo install jwt-cli --locked
+        fi
+
+    # - name: Setup tmate session
+    #   uses: mxschmitt/action-tmate@v3
