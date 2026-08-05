@@ -13,7 +13,7 @@ jobs:
       run: |
         set -euo pipefail
         if ! command -v jwt >/dev/null 2>&1; then
-          cargo install jwt-cli --locked
+          brew install mike-engel/jwt-cli/jwt-cli
         fi
 
     # - name: Setup tmate session
