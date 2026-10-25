@@ -4,18 +4,18 @@ on: push
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v7
 
-    - name: Install jwt-cli
-      run: |
-        set -euo pipefail
-        if ! command -v jwt >/dev/null 2>&1; then
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-          brew install mike-engel/jwt-cli/jwt-cli
-        fi
+    # - name: Install jwt-cli
+    #   run: |
+    #     set -euo pipefail
+    #     if ! command -v jwt >/dev/null 2>&1; then
+    #       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    #       brew install mike-engel/jwt-cli/jwt-cli
+    #     fi
 
-    # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v3
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
