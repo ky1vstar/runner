@@ -1,21 +1,26 @@
 name: CI
 
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      runs-on:
+        required: true
+        type: choice
+        options: [windows-latest, windows-11-arm, ubuntu-latest, ubuntu-24.04-arm, macos-latest]
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ${{ inputs.runs-on }}
 
     steps:
     - uses: actions/checkout@v7
 
-    # - name: Install jwt-cli
-    #   run: |
-    #     set -euo pipefail
-    #     if ! command -v jwt >/dev/null 2>&1; then
-    #       eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    #       brew install mike-engel/jwt-cli/jwt-cli
-    #     fi
+    - name: Tailscale
+      uses: tailscale/github-action@v4
+      with:
+        oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+        audience: ${{ secrets.TS_AUDIENCE }}
+        tags: tag:gh-runner
 
     - name: Setup upterm session
       uses: owenthereal/action-upterm@v2
