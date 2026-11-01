@@ -27,3 +27,4 @@ jobs:
       with:
         upterm-server: ssh://upterm:22
         known-hosts: ${{ secrets.UPTERM_KNOWN_HOSTS }}
+        limit-access-to-actor: true
