@@ -1,5 +1,8 @@
 name: CI
 
+# The nonce lets a driver find the exact run it dispatched by title.
+run-name: "runner ${{ inputs.runs-on }} ${{ inputs.nonce }}"
+
 on:
   workflow_dispatch:
     inputs:
@@ -7,6 +10,9 @@ on:
         required: true
         type: choice
         options: [windows-latest, windows-11-arm, ubuntu-latest, ubuntu-24.04-arm, macos-latest]
+      nonce:
+        required: false
+        default: ""
 
 jobs:
   test:
@@ -23,7 +29,22 @@ jobs:
         tags: tag:gh-runner
 
     - name: Setup upterm session
+      id: upterm
       uses: owenthereal/action-upterm@v2
       with:
         upterm-server: ssh://upterm:22
         known-hosts: ${{ secrets.UPTERM_KNOWN_HOSTS }}
+        detached: true
+        wait-timeout-minutes: 10
+
+    # Logs of an in-progress job are not downloadable; an artifact is.
+    - name: Publish ssh command
+      shell: bash
+      env:
+        SSH_COMMAND: ${{ steps.upterm.outputs.ssh-command }}
+      run: printf '%s\n' "$SSH_COMMAND" > ssh-command.txt
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: ssh-command
+        path: ssh-command.txt
