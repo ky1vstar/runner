@@ -24,3 +24,6 @@ jobs:
 
     - name: Setup upterm session
       uses: owenthereal/action-upterm@v2
+      with:
+        upterm-server: ssh://upterm:22
+        known-hosts: ${{ secrets.UPTERM_KNOWN_HOSTS }}
