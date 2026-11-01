@@ -28,12 +28,34 @@ jobs:
         oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
         tags: tag:gh-runner
 
+    # MagicDNS does not reach the OS resolver on every runner (windows-11-arm), so dial by IP.
+    - name: Resolve upterm relay
+      id: relay
+      shell: bash
+      env:
+        KNOWN_HOSTS: ${{ secrets.UPTERM_KNOWN_HOSTS }}
+      run: |
+        for i in $(seq 1 30); do
+          ip=$(tailscale ip -4 upterm 2>/dev/null | head -1) && [ -n "$ip" ] && break
+          sleep 2
+        done
+        [ -n "$ip" ] || { echo "::error::cannot resolve upterm via tailscale"; exit 1; }
+        echo "server=ssh://$ip:22" >> "$GITHUB_OUTPUT"
+        {
+          echo 'known-hosts<<KH_EOF'
+          printf '%s\n' "$KNOWN_HOSTS" | awk -v ip="$ip" '
+            /^[[:space:]]*(#|$)/ { print; next }
+            /^@/ { $2 = $2 "," ip; print; next }
+            { $1 = $1 "," ip; print }'
+          echo 'KH_EOF'
+        } >> "$GITHUB_OUTPUT"
+
     - name: Setup upterm session
       id: upterm
       uses: owenthereal/action-upterm@v2
       with:
-        upterm-server: ssh://upterm:22
-        known-hosts: ${{ secrets.UPTERM_KNOWN_HOSTS }}
+        upterm-server: ${{ steps.relay.outputs.server }}
+        known-hosts: ${{ steps.relay.outputs.known-hosts }}
         detached: true
         wait-timeout-minutes: 10
 
